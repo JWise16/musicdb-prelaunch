@@ -1,5 +1,4 @@
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { Button } from '../common/Button'
+
 import logo from '../../assets/logo.png'
 import trackShowsIcon from '../../assets/about-us/use-cases/trackshows.png'
 import trackShowsFigure from '../../assets/about-us/use-cases/figure.png'

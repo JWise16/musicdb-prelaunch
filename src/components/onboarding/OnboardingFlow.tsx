@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { supabase } from '../../lib/supabase'
-import { StepIndicator } from '../common/StepIndicator'
-import { Button } from '../common/Button'
 import { VenueInfoStep } from './steps/VenueInfoStep'
 import { PersonalInfoStep } from './steps/PersonalInfoStep'
 import { BookingPreferencesStep } from './steps/BookingPreferencesStep'
 import { ArtistDiscoveryStep } from './steps/ArtistDiscoveryStep'
 import { CompletionStep } from './steps/CompletionStep'
+
 
 // Step-specific validation schemas
 const venueInfoSchema = yup.object({
