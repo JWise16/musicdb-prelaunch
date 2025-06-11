@@ -73,20 +73,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="space-y-6 mb-12">
             <h2 className="text-5xl md:text-6xl font-bold text-black tracking-tight leading-tight">
               {startTypewriter ? (
-                <div className="flex justify-center items-center" style={{ paddingLeft: '0.5rem' }}>
-                  <TypewriterEffect 
-                    text="Meet your next artist" 
-                    speed={80}
-                    className="text-5xl md:text-6xl font-bold text-black tracking-tight leading-tight"
-                    onComplete={handleTitleComplete}
-                  />
-                  {titleComplete && (
-                    <span className="text-5xl md:text-6xl font-bold ml-1 animate-pulse" style={{
-                      animation: 'blink 1.2s infinite',
-                      color: 'black'
-                    }}>_</span>
-                  )}
-                </div>
+                <TypewriterEffect 
+                  text="Meet your next artist" 
+                  speed={80}
+                  className="text-5xl md:text-6xl font-bold text-black tracking-tight leading-tight"
+                  onComplete={handleTitleComplete}
+                  showFinalCursor={true}
+                />
               ) : (
                 <span className="text-5xl md:text-6xl font-bold text-black tracking-tight leading-tight opacity-0">
                   Meet your next artist
