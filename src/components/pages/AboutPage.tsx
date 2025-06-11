@@ -9,6 +9,7 @@ import discoverNewTalentFigure from '../../assets/about-us/discover-new-talent/f
 import personalDatabaseIcon from '../../assets/about-us/personal-database/icon.png'
 import personalDatabaseFigure from '../../assets/about-us/personal-database/figure.png'
 import { useState } from 'react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 interface AboutPageProps {
   onBack: () => void
@@ -17,6 +18,7 @@ interface AboutPageProps {
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStarted }) => {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -45,8 +47,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStar
               />
             </div>
             
-            {/* Navigation Links - Centered */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-12">
+            {/* Desktop Navigation Links - Hidden on mobile */}
+            <div className="hidden md:flex items-center space-x-8">
               <button
                 onClick={() => scrollToSection('manifesto')}
                 className="text-gray-900 hover:text-gray-600 font-medium transition-colors text-lg"
@@ -67,8 +69,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStar
               </button>
             </div>
             
-            {/* Get Started Button */}
-            <div className="flex items-center">
+            {/* Desktop Get Started Button - Hidden on mobile */}
+            <div className="hidden md:flex items-center">
               <button
                 onClick={onGetStarted}
                 className="bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-full font-medium transition-colors"
@@ -76,7 +78,62 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStar
                 Get started
               </button>
             </div>
+
+            {/* Mobile menu button - Visible only on mobile */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-gray-900 hover:text-gray-600 p-2"
+              >
+                {mobileMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Navigation Menu - Visible only when open */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
+              <div className="flex flex-col space-y-4">
+                <button
+                  onClick={() => {
+                    scrollToSection('manifesto')
+                    setMobileMenuOpen(false)
+                  }}
+                  className="text-gray-900 hover:text-gray-600 font-medium transition-colors text-lg text-left"
+                >
+                  Manifesto
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection('use-cases')
+                    setMobileMenuOpen(false)
+                  }}
+                  className="text-gray-900 hover:text-gray-600 font-medium transition-colors text-lg text-left"
+                >
+                  Use Cases
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection('faq')
+                    setMobileMenuOpen(false)
+                  }}
+                  className="text-gray-900 hover:text-gray-600 font-medium transition-colors text-lg text-left"
+                >
+                  FAQ
+                </button>
+                <button
+                  onClick={onGetStarted}
+                  className="bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-full font-medium transition-colors w-fit"
+                >
+                  Get started
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
