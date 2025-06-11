@@ -15,7 +15,7 @@ interface AboutPageProps {
   onGetStarted: () => void
 }
 
-export const AboutPage: React.FC<AboutPageProps> = ({ onBack, onGetStarted }) => {
+export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStarted }) => {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   
   const scrollToSection = (sectionId: string) => {
