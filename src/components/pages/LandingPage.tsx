@@ -3,16 +3,10 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Button } from '../common/Button'
 import { TypewriterEffect } from '../common/TypewriterEffect'
 import logoImage from '../../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 
-interface LandingPageProps {
-  onGetStarted: () => void
-  onAboutUs: () => void
-}
-
-export const LandingPage: React.FC<LandingPageProps> = ({ 
-  onGetStarted, 
-  onAboutUs 
-}) => {
+export function LandingPage() {
+  const navigate = useNavigate()
   const [logoVisible, setLogoVisible] = useState(false)
   const [startTypewriter, setStartTypewriter] = useState(false)
   const [showSubtitle, setShowSubtitle] = useState(false)
@@ -97,7 +91,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           
           <div className="pt-4">
             <button
-              onClick={onGetStarted}
+              onClick={() => navigate('/onboarding')}
               className={`inline-flex items-center justify-center bg-black text-white px-12 py-4 text-lg font-medium rounded-full hover:bg-gray-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 ${
                 showButtonEffect 
                   ? 'animate-bounce shadow-lg shadow-gray-400/30 hover:shadow-xl hover:shadow-gray-400/40' 
@@ -121,7 +115,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <div className="flex-none pb-20">
         <div className="text-center">
           <Button
-            onClick={onAboutUs}
+            onClick={() => navigate('/about')}
             variant="ghost"
             className="text-gray-600 text-lg hover:text-black"
           >

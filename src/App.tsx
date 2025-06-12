@@ -11,7 +11,6 @@ import { OnboardingFlow } from './components/onboarding/OnboardingFlow'
 function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState('landing')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -38,30 +37,15 @@ function App() {
         {/* Public routes */}
         <Route 
           path="/" 
-          element={
-            <LandingPage
-              onGetStarted={() => setPage('onboarding')}
-              onAboutUs={() => setPage('about')}
-            />
-          } 
+          element={<LandingPage />} 
         />
         <Route 
           path="/about" 
-          element={
-            <AboutPage 
-              onGetStarted={() => setPage('onboarding')}
-              onBack={() => setPage('landing')} 
-            />
-          } 
+          element={<AboutPage />} 
         />
         <Route 
           path="/onboarding" 
-          element={
-            <OnboardingFlow 
-              onBack={() => setPage('landing')} 
-              onAboutUs={() => setPage('about')}
-            />
-          } 
+          element={<OnboardingFlow />} 
         />
         
         {/* Admin routes */}

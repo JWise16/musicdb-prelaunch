@@ -1,4 +1,3 @@
-
 import logo from '../../assets/logo.png'
 import trackShowsIcon from '../../assets/about-us/use-cases/trackshows.png'
 import trackShowsFigure from '../../assets/about-us/use-cases/figure.png'
@@ -10,13 +9,10 @@ import personalDatabaseIcon from '../../assets/about-us/personal-database/icon.p
 import personalDatabaseFigure from '../../assets/about-us/personal-database/figure.png'
 import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useNavigate } from 'react-router-dom'
 
-interface AboutPageProps {
-  onBack: () => void
-  onGetStarted: () => void
-}
-
-export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStarted }) => {
+export function AboutPage() {
+  const navigate = useNavigate()
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   
@@ -72,7 +68,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStar
             {/* Desktop Get Started Button - Hidden on mobile */}
             <div className="hidden md:flex items-center">
               <button
-                onClick={onGetStarted}
+                onClick={() => navigate('/onboarding')}
                 className="bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-full font-medium transition-colors"
               >
                 Get started
@@ -126,7 +122,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack: _onBack, onGetStar
                   FAQ
                 </button>
                 <button
-                  onClick={onGetStarted}
+                  onClick={() => navigate('/onboarding')}
                   className="bg-black text-white hover:bg-gray-800 px-6 py-2 rounded-full font-medium transition-colors w-fit"
                 >
                   Get started

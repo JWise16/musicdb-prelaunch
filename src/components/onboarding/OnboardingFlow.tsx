@@ -7,6 +7,7 @@ import { PersonalInfoStep } from './steps/PersonalInfoStep'
 import { BookingPreferencesStep } from './steps/BookingPreferencesStep'
 import { ArtistDiscoveryStep } from './steps/ArtistDiscoveryStep'
 import { CompletionStep } from './steps/CompletionStep'
+import { useNavigate } from 'react-router-dom'
 
 
 // Step-specific validation schemas
@@ -42,111 +43,40 @@ const stepSchemas = [
 ]
 
 const steps = [
-  { title: 'Venue Info', component: VenueInfoStep },
-  { title: 'Personal Info', component: PersonalInfoStep },
-  { title: 'Booking Preferences', component: BookingPreferencesStep },
-  { title: 'Artist Discovery', component: ArtistDiscoveryStep },
-  { title: 'Complete', component: CompletionStep },
+  { component: VenueInfoStep, title: 'Venue Information' },
+  { component: PersonalInfoStep, title: 'Personal Information' },
+  { component: BookingPreferencesStep, title: 'Booking Preferences' },
+  { component: ArtistDiscoveryStep, title: 'Artist Discovery' },
+  { component: CompletionStep, title: 'Completion' },
 ]
 
-interface OnboardingFlowProps {
-  onBack: () => void
-  onAboutUs?: () => void
-}
-
-export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onBack, onAboutUs }) => {
+export function OnboardingFlow() {
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const methods = useForm({
     mode: 'onChange',
-    defaultValues: {
-      venue_name: '',
-      venue_location: '',
-      venue_capacity: '',
-      first_name: '',
-      last_name: '',
-      role_at_venue: '',
-      contact_method: '',
-      contact_value: '',
-      booking_priorities: [],
-      booking_priorities_other: '',
-      artist_discovery_methods: [],
-      artist_discovery_other: '',
-    }
   })
 
-  const validateCurrentStep = async () => {
-    const currentSchema = stepSchemas[currentStep]
-    if (!currentSchema) return true
-
-    try {
-      const formData = methods.getValues()
-      await currentSchema.validate(formData, { abortEarly: false })
-      return true
-    } catch (error: any) {
-      // Set validation errors
-      if (error.inner) {
-        error.inner.forEach((err: any) => {
-          methods.setError(err.path, { message: err.message })
-        })
-      }
-      return false
-    }
-  }
-
-  const handleNext = async () => {
-    console.log('handleNext called, currentStep:', currentStep)
-    console.log('Current form data:', methods.getValues())
-    
-    const isValid = await validateCurrentStep()
-    console.log('Validation result:', isValid)
-    
-    if (!isValid) {
-      console.log('Validation failed, stopping')
-      return
-    }
-
-    if (currentStep < steps.length - 2) {
-      console.log('Moving to next step')
-      setCurrentStep(prev => prev + 1)
-    } else {
-      // Final submission
-      console.log('Final submission')
-      setIsSubmitting(true)
-      try {
-        const formData = methods.getValues()
-        // Convert venue_capacity to number
-        const submissionData = {
-          ...formData,
-          venue_capacity: formData.venue_capacity ? Number(formData.venue_capacity) : null
-        }
-        console.log('Submitting data:', submissionData)
-        
-        const { error } = await supabase
-          .from('venue_submissions')
-          .insert(submissionData)
-        if (error) throw error
-        setCurrentStep(prev => prev + 1)
-      } catch (error) {
-        console.error('Submission error:', error)
-        alert('There was an error submitting your information. Please try again.')
-      } finally {
-        setIsSubmitting(false)
-      }
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1)
     }
   }
 
   const handlePrevious = () => {
-    setCurrentStep(prev => Math.max(0, prev - 1))
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
   }
 
-  const CurrentStepComponent = steps[currentStep]?.component || CompletionStep
+  const CurrentStepComponent = steps[currentStep].component
 
   return (
     <FormProvider {...methods}>
       {currentStep === steps.length - 1 ? (
-        <CompletionStep onLearnMore={onAboutUs} />
+        <CompletionStep onLearnMore={() => navigate('/about')} />
       ) : (
         <CurrentStepComponent
           onPrevious={handlePrevious}
@@ -154,7 +84,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onBack, onAboutU
           isFirst={currentStep === 0}
           isLast={currentStep === steps.length - 2}
           isSubmitting={isSubmitting}
-          onBackToHome={onBack}
+          onBackToHome={() => navigate('/')}
         />
       )}
     </FormProvider>
