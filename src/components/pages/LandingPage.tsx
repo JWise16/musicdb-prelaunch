@@ -17,7 +17,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [startTypewriter, setStartTypewriter] = useState(false)
   const [showSubtitle, setShowSubtitle] = useState(false)
   const [showButtonEffect, setShowButtonEffect] = useState(false)
-  const [titleComplete, setTitleComplete] = useState(false)
 
   // Start logo animation on mount
   useEffect(() => {
@@ -40,7 +39,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }, [logoVisible])
 
   const handleTitleComplete = () => {
-    setTitleComplete(true)
     setShowButtonEffect(true) // Show button when title completes
   }
 
