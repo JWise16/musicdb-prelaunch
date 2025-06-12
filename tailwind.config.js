@@ -1,11 +1,18 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        typewriter: {
+          from: { width: '0' },
+          to: { width: '100%' },
+        },
+      },
+    },
   },
   plugins: [],
 }
