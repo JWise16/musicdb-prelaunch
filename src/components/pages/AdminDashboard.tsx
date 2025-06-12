@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import type { Database } from '../../lib/database.types'
 import { Dialog } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, EyeIcon } from '@heroicons/react/24/outline'
 
 type VenueSubmission = Database['public']['Tables']['venue_submissions']['Row']
 
@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [sortField, setSortField] = useState<keyof VenueSubmission>('created_at')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [submissionToDelete, setSubmissionToDelete] = useState<VenueSubmission | null>(null)
+  const [submissionToView, setSubmissionToView] = useState<VenueSubmission | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
@@ -72,6 +73,17 @@ export default function AdminDashboard() {
       setSortField(field)
       setSortDirection('asc')
     }
+  }
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'N/A'
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
   if (loading) return <div className="p-4">Loading...</div>
@@ -140,12 +152,20 @@ export default function AdminDashboard() {
                   )}
                 </td>
                 <td className="px-4 py-2">
-                  {new Date(submission.created_at || '').toLocaleDateString()}
+                  {formatDate(submission.created_at)}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2 space-x-2">
+                  <button
+                    onClick={() => setSubmissionToView(submission)}
+                    className="text-blue-600 hover:text-blue-800"
+                    title="View Details"
+                  >
+                    <EyeIcon className="h-5 w-5" />
+                  </button>
                   <button
                     onClick={() => setSubmissionToDelete(submission)}
                     className="text-red-600 hover:text-red-800"
+                    title="Delete"
                   >
                     Delete
                   </button>
@@ -198,6 +218,86 @@ export default function AdminDashboard() {
                 {isDeleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      {/* View Details Modal */}
+      <Dialog
+        open={!!submissionToView}
+        onClose={() => setSubmissionToView(null)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="mx-auto max-w-2xl w-full rounded bg-white p-6">
+            <div className="flex items-center justify-between mb-4">
+              <Dialog.Title className="text-xl font-medium">
+                Submission Details
+              </Dialog.Title>
+              <button
+                onClick={() => setSubmissionToView(null)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            {submissionToView && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-medium text-gray-500">Venue Information</h3>
+                    <p className="mt-1">Name: {submissionToView.venue_name}</p>
+                    <p>Location: {submissionToView.venue_location}</p>
+                    <p>Capacity: {submissionToView.venue_capacity?.toLocaleString() || 'N/A'}</p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-medium text-gray-500">Contact Information</h3>
+                    <p className="mt-1">Name: {`${submissionToView.first_name} ${submissionToView.last_name}`}</p>
+                    <p>Role: {submissionToView.role_at_venue}</p>
+                    <p>Contact: {submissionToView.contact_value} ({submissionToView.contact_method})</p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium text-gray-500">Booking Priorities</h3>
+                    <ul className="mt-1 list-disc list-inside">
+                      {submissionToView.booking_priorities?.map((priority, index) => (
+                        <li key={index}>{priority}</li>
+                      ))}
+                    </ul>
+                    {submissionToView.booking_priorities_other && (
+                      <p className="mt-1">Other: {submissionToView.booking_priorities_other}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium text-gray-500">Artist Discovery Methods</h3>
+                    <ul className="mt-1 list-disc list-inside">
+                      {submissionToView.artist_discovery_methods?.map((method, index) => (
+                        <li key={index}>{method}</li>
+                      ))}
+                    </ul>
+                    {submissionToView.artist_discovery_other && (
+                      <p className="mt-1">Other: {submissionToView.artist_discovery_other}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-gray-500">
+                    Submitted: {formatDate(submissionToView.created_at)}
+                  </p>
+                  {submissionToView.updated_at && (
+                    <p className="text-sm text-gray-500">
+                      Last Updated: {formatDate(submissionToView.updated_at)}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </Dialog.Panel>
         </div>
       </Dialog>
