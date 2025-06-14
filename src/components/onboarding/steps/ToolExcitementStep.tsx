@@ -116,7 +116,7 @@ export function ToolExcitementStep({ onPrevious, onNext, isFirst, isLast, isSubm
               disabled={isSubmitting}
               className="inline-flex items-center justify-center bg-black text-white px-12 py-4 rounded-full hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50"
             >
-              <ArrowRightIcon className="h-6 w-6" />
+              {isLast ? 'Submit' : <ArrowRightIcon className="h-6 w-6" />}
             </button>
           </div>
         </div>
