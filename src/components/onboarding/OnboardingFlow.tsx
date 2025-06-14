@@ -1,19 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../../lib/supabase'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { supabase, initAnonymousAuth } from '../../lib/supabase'
 import { VenueInfoStep } from './steps/VenueInfoStep'
 import { PersonalInfoStep } from './steps/PersonalInfoStep'
-import { BookingPreferencesStep } from './steps/BookingPreferencesStep'
-import { ArtistDiscoveryStep } from './steps/ArtistDiscoveryStep'
+import { ToolExcitementStep } from './steps/ToolExcitementStep'
 import { CompletionStep } from './steps/CompletionStep'
 import * as yup from 'yup'
+import type { Database } from '../../lib/database.types'
+
+type VenueSubmission = Database['public']['Tables']['venue_submissions']['Row']
+type FormData = Omit<VenueSubmission, 'id' | 'created_at' | 'updated_at' | 'venue_capacity'> & {
+  venue_capacity: string | null
+}
+
+type FormFieldName = keyof FormData | 'root' | `root.${string}` | `tool_excitement.${number}`
+
+interface ValidationError {
+  path: FormFieldName
+  message: string
+}
 
 const steps = [
   { component: VenueInfoStep, title: 'Venue Information' },
   { component: PersonalInfoStep, title: 'Personal Information' },
-  { component: BookingPreferencesStep, title: 'Booking Preferences' },
-  { component: ArtistDiscoveryStep, title: 'Artist Discovery' },
+  { component: ToolExcitementStep, title: 'Tool Excitement' },
   { component: CompletionStep, title: 'Completion' },
 ]
 
@@ -32,43 +43,91 @@ const stepSchemas: Record<number, yup.ObjectSchema<any>> = {
     contact_value: yup.string().required('Contact information is required'),
   }),
   2: yup.object().shape({
-    booking_priorities: yup.array().min(1, 'Select at least one priority'),
-    booking_priorities_other: yup.string().when('booking_priorities', {
-      is: (priorities: string[]) => priorities?.includes('other'),
-      then: () => yup.string().required('Please specify other priorities'),
-    }),
-  }),
-  3: yup.object().shape({
-    artist_discovery_methods: yup.array().min(1, 'Select at least one method'),
-    artist_discovery_other: yup.string().when('artist_discovery_methods', {
-      is: (methods: string[]) => methods?.includes('other'),
-      then: () => yup.string().required('Please specify other methods'),
+    tool_excitement: yup.array().min(1, 'Select at least one option'),
+    tool_excitement_other: yup.string().when('tool_excitement', {
+      is: (options: string[]) => options?.includes('other'),
+      then: () => yup.string().required('Please specify what excites you'),
     }),
   }),
 }
 
 export function OnboardingFlow() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submissionId, setSubmissionId] = useState<string | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  const methods = useForm({
+  // Initialize anonymous auth
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await initAnonymousAuth()
+        setIsInitialized(true)
+      } catch (error) {
+        console.error('Error initializing anonymous auth:', error)
+      }
+    }
+    init()
+  }, [])
+
+  const methods = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
       venue_name: '',
       venue_location: '',
-      venue_capacity: '',
+      venue_capacity: null,
       first_name: '',
       last_name: '',
       role_at_venue: '',
       contact_method: '',
       contact_value: '',
-      booking_priorities: [],
-      booking_priorities_other: '',
-      artist_discovery_methods: [],
-      artist_discovery_other: '',
+      tool_excitement: [],
+      tool_excitement_other: '',
     }
   })
+
+  // Load existing submission if ID is provided
+  useEffect(() => {
+    const loadSubmission = async () => {
+      const id = searchParams.get('id')
+      if (id) {
+        try {
+          const { data, error } = await supabase
+            .from('venue_submissions')
+            .select('*')
+            .eq('id', id)
+            .single()
+
+          if (error) throw error
+          if (data) {
+            setSubmissionId(data.id)
+            // Convert data to match form types
+            const formData: FormData = {
+              ...data,
+              venue_capacity: data.venue_capacity?.toString() || null,
+              tool_excitement: data.tool_excitement || [],
+              tool_excitement_other: data.tool_excitement_other || '',
+            }
+            methods.reset(formData)
+            
+            // Determine which step to show based on completed data
+            if (data.tool_excitement && data.tool_excitement.length > 0) {
+              setCurrentStep(3) // Show completion
+            } else if (data.first_name && data.last_name) {
+              setCurrentStep(2) // Show tool excitement
+            } else if (data.venue_name && data.venue_location) {
+              setCurrentStep(1) // Show personal info
+            }
+          }
+        } catch (error) {
+          console.error('Error loading submission:', error)
+        }
+      }
+    }
+    loadSubmission()
+  }, [searchParams, methods])
 
   const validateCurrentStep = async () => {
     const currentSchema = stepSchemas[currentStep]
@@ -79,9 +138,8 @@ export function OnboardingFlow() {
       await currentSchema.validate(formData, { abortEarly: false })
       return true
     } catch (error: any) {
-      // Set validation errors
       if (error.inner) {
-        error.inner.forEach((err: any) => {
+        error.inner.forEach((err: ValidationError) => {
           methods.setError(err.path, { message: err.message })
         })
       }
@@ -89,35 +147,68 @@ export function OnboardingFlow() {
     }
   }
 
+  const saveCurrentStep = async (formData: FormData) => {
+    if (!isInitialized) {
+      throw new Error('Authentication not initialized')
+    }
+
+    try {
+      const stepData = {
+        ...formData,
+        venue_capacity: formData.venue_capacity ? Number(formData.venue_capacity) : null,
+        tool_excitement: formData.tool_excitement || [],
+        tool_excitement_other: formData.tool_excitement_other || null,
+        updated_at: new Date().toISOString()
+      }
+
+      if (submissionId) {
+        // Update existing submission
+        const { error } = await supabase
+          .from('venue_submissions')
+          .update(stepData)
+          .eq('id', submissionId)
+        
+        if (error) throw error
+      } else {
+        // Create new submission
+        const { data, error } = await supabase
+          .from('venue_submissions')
+          .insert(stepData)
+          .select()
+          .single()
+        
+        if (error) throw error
+        if (data) {
+          setSubmissionId(data.id)
+          // Update URL with submission ID
+          navigate(`/onboarding?id=${data.id}`, { replace: true })
+        }
+      }
+    } catch (error) {
+      console.error('Error saving step:', error)
+      throw error
+    }
+  }
+
   const handleNext = async () => {
     const isValid = await validateCurrentStep()
     if (!isValid) return
 
-    if (currentStep < steps.length - 2) {
-      setCurrentStep(currentStep + 1)
-    } else {
-      // Final submission
-      setIsSubmitting(true)
-      try {
-        const formData = methods.getValues()
-        // Convert venue_capacity to number
-        const submissionData = {
-          ...formData,
-          venue_capacity: formData.venue_capacity ? Number(formData.venue_capacity) : null
-        }
-        
-        const { error } = await supabase
-          .from('venue_submissions')
-          .insert(submissionData)
-        
-        if (error) throw error
+    setIsSubmitting(true)
+    try {
+      const formData = methods.getValues()
+      await saveCurrentStep(formData)
+
+      if (currentStep < steps.length - 2) {
         setCurrentStep(currentStep + 1)
-      } catch (error) {
-        console.error('Submission error:', error)
-        alert('There was an error submitting your information. Please try again.')
-      } finally {
-        setIsSubmitting(false)
+      } else {
+        setCurrentStep(currentStep + 1)
       }
+    } catch (error) {
+      console.error('Submission error:', error)
+      alert('There was an error saving your information. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -128,6 +219,14 @@ export function OnboardingFlow() {
   }
 
   const CurrentStepComponent = steps[currentStep].component
+
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <FormProvider {...methods}>

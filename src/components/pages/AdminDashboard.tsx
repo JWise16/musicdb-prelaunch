@@ -307,32 +307,24 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <h3 className="font-medium text-gray-900 mb-3">Booking Priorities</h3>
+                    <h3 className="font-medium text-gray-900 mb-3">Tool Excitement</h3>
                     <div className="space-y-2">
                       <ul className="list-disc list-inside text-gray-600">
-                        {submissionToView.booking_priorities?.map((priority, index) => (
-                          <li key={index}>{priority}</li>
-                        ))}
+                        {submissionToView.tool_excitement?.map((excitement, index) => {
+                          // Map the excitement IDs to their display labels
+                          const label = {
+                            'track_local_shows': 'Track Local Shows',
+                            'artist_insights': 'Artist Performance Insights',
+                            'rising_talent': 'Find Rising Talent',
+                            'booking_dashboard': 'Your Booking Dashboard',
+                            'other': 'Other'
+                          }[excitement] || excitement;
+                          return <li key={index}>{label}</li>;
+                        })}
                       </ul>
-                      {submissionToView.booking_priorities_other && (
+                      {submissionToView.tool_excitement_other && (
                         <p className="text-gray-600 mt-2">
-                          <span className="font-medium">Other:</span> {submissionToView.booking_priorities_other}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <h3 className="font-medium text-gray-900 mb-3">Artist Discovery Methods</h3>
-                    <div className="space-y-2">
-                      <ul className="list-disc list-inside text-gray-600">
-                        {submissionToView.artist_discovery_methods?.map((method, index) => (
-                          <li key={index}>{method}</li>
-                        ))}
-                      </ul>
-                      {submissionToView.artist_discovery_other && (
-                        <p className="text-gray-600 mt-2">
-                          <span className="font-medium">Other:</span> {submissionToView.artist_discovery_other}
+                          <span className="font-medium">Other:</span> {submissionToView.tool_excitement_other}
                         </p>
                       )}
                     </div>

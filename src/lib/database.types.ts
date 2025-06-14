@@ -11,10 +11,6 @@ export type Database = {
     Tables: {
       venue_submissions: {
         Row: {
-          artist_discovery_methods: string[] | null
-          artist_discovery_other: string | null
-          booking_priorities: string[] | null
-          booking_priorities_other: string | null
           contact_method: string
           contact_value: string
           created_at: string | null
@@ -22,16 +18,14 @@ export type Database = {
           id: string
           last_name: string
           role_at_venue: string
+          tool_excitement: string[] | null
+          tool_excitement_other: string | null
           updated_at: string | null
           venue_capacity: number | null
           venue_location: string
           venue_name: string
         }
         Insert: {
-          artist_discovery_methods?: string[] | null
-          artist_discovery_other?: string | null
-          booking_priorities?: string[] | null
-          booking_priorities_other?: string | null
           contact_method: string
           contact_value: string
           created_at?: string | null
@@ -39,16 +33,14 @@ export type Database = {
           id?: string
           last_name: string
           role_at_venue: string
+          tool_excitement?: string[] | null
+          tool_excitement_other?: string | null
           updated_at?: string | null
           venue_capacity?: number | null
           venue_location: string
           venue_name: string
         }
         Update: {
-          artist_discovery_methods?: string[] | null
-          artist_discovery_other?: string | null
-          booking_priorities?: string[] | null
-          booking_priorities_other?: string | null
           contact_method?: string
           contact_value?: string
           created_at?: string | null
@@ -56,6 +48,8 @@ export type Database = {
           id?: string
           last_name?: string
           role_at_venue?: string
+          tool_excitement?: string[] | null
+          tool_excitement_other?: string | null
           updated_at?: string | null
           venue_capacity?: number | null
           venue_location?: string
