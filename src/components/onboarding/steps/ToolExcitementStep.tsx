@@ -17,22 +17,22 @@ const excitementOptions = [
   {
     id: 'track_shows',
     label: 'Track Local Shows',
-    description: 'Stay updated on all local shows and events'
+    description: 'See which artists are drawing crowds in your area that match your venue\'s size.'
   },
   {
     id: 'artist_insights',
     label: 'Artist Performance Insights',
-    description: 'Get detailed analytics on artist performance'
+    description: 'Get deep analytics on an artist\'s streaming, socials, and listener demographics.'
   },
   {
     id: 'rising_talent',
     label: 'Find Rising Talent',
-    description: 'Discover up-and-coming artists in your area'
+    description: 'Discover and track new artists you haven\'t heard of before.'
   },
   {
     id: 'booking_dashboard',
     label: 'Your Booking Dashboard',
-    description: 'Manage all your bookings in one place'
+    description: 'View your past shows, performance trends, and where to experiment next—all in one place.'
   },
   {
     id: 'other',
@@ -76,11 +76,13 @@ export function ToolExcitementStep({ onPrevious, onNext, isFirst, isLast, isSubm
           <div className="space-y-8">
             {excitementOptions.map((option) => (
               <div key={option.id} className="flex items-start space-x-4">
-                <Checkbox
-                  id={option.id}
-                  checked={selectedOptions.includes(option.id)}
-                  onCheckedChange={(checked) => handleCheckboxChange(option.id, checked as boolean)}
-                />
+                <div className="pt-1">
+                  <Checkbox
+                    id={option.id}
+                    checked={selectedOptions.includes(option.id)}
+                    onCheckedChange={(checked) => handleCheckboxChange(option.id, checked as boolean)}
+                  />
+                </div>
                 <div className="space-y-1">
                   <Label htmlFor={option.id} className="text-xl text-gray-900">
                     {option.label}
