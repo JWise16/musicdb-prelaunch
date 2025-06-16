@@ -1,11 +1,7 @@
 import logo from '../../assets/logo.png'
-import trackShowsIcon from '../../assets/about-us/use-cases/trackshows.png'
 import trackShowsFigure from '../../assets/about-us/use-cases/figure.png'
-import artistInsightsIcon from '../../assets/about-us/artist-insights/icon.png'
 import artistInsightsFigure from '../../assets/about-us/artist-insights/figure.png'
-import discoverNewTalentIcon from '../../assets/about-us/discover-new-talent/icon.png'
 import discoverNewTalentFigure from '../../assets/about-us/discover-new-talent/figure.png'
-import personalDatabaseIcon from '../../assets/about-us/personal-database/icon.png'
 import personalDatabaseFigure from '../../assets/about-us/personal-database/figure.png'
 import { useState } from 'react'
 import { 
