@@ -8,7 +8,14 @@ import discoverNewTalentFigure from '../../assets/about-us/discover-new-talent/f
 import personalDatabaseIcon from '../../assets/about-us/personal-database/icon.png'
 import personalDatabaseFigure from '../../assets/about-us/personal-database/figure.png'
 import { useState } from 'react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { 
+  Bars3Icon, 
+  XMarkIcon,
+  CalendarIcon,
+  ChartBarIcon,
+  SparklesIcon,
+  TableCellsIcon
+} from '@heroicons/react/24/outline'
 import { useNavigate } from 'react-router-dom'
 
 export function AboutPage() {
@@ -202,11 +209,7 @@ export function AboutPage() {
             <div className="space-y-6">
               {/* Icon and Header */}
               <div className="flex items-center space-x-4">
-                <img 
-                  src={trackShowsIcon} 
-                  alt="Track Shows Icon" 
-                  className="w-12 h-12"
-                />
+                <CalendarIcon className="w-12 h-12 text-[#73CBC0]" />
                 <div className="bg-[#73CBC0] text-white px-6 py-3 rounded-full font-medium text-lg">
                   Track Shows in the Area
                 </div>
@@ -239,11 +242,7 @@ export function AboutPage() {
             <div className="space-y-6">
               {/* Icon and Header */}
               <div className="flex items-center space-x-4">
-                <img 
-                  src={artistInsightsIcon} 
-                  alt="Artist Insights Icon" 
-                  className="w-12 h-12"
-                />
+                <ChartBarIcon className="w-12 h-12 text-[#4B86C7]" />
                 <div className="bg-[#4B86C7] text-white px-6 py-3 rounded-full font-medium text-lg">
                   Artist Insights
                 </div>
@@ -276,11 +275,7 @@ export function AboutPage() {
             <div className="space-y-6">
               {/* Icon and Header */}
               <div className="flex items-center space-x-4">
-                <img 
-                  src={discoverNewTalentIcon} 
-                  alt="Discover New Talent Icon" 
-                  className="w-12 h-12"
-                />
+                <SparklesIcon className="w-12 h-12 text-[#282862]" />
                 <div className="bg-[#282862] text-white px-6 py-3 rounded-full font-medium text-lg">
                   Discover New Talent
                 </div>
@@ -310,11 +305,7 @@ export function AboutPage() {
             <div className="space-y-6">
               {/* Icon and Header */}
               <div className="flex items-center space-x-4">
-                <img 
-                  src={personalDatabaseIcon} 
-                  alt="Personal Database Icon" 
-                  className="w-12 h-12"
-                />
+                <TableCellsIcon className="w-12 h-12 text-[#61C5FA]" />
                 <div className="bg-[#61C5FA] text-white px-6 py-3 rounded-full font-medium text-lg">
                   Personal Database
                 </div>
