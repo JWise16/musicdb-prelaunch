@@ -13,15 +13,6 @@ import {
   TableCellsIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline'
-import { 
-  Bars3Icon as Bars3IconSolid, 
-  XMarkIcon as XMarkIconSolid,
-  CalendarIcon as CalendarIconSolid,
-  ChartBarIcon as ChartBarIconSolid,
-  SparklesIcon as SparklesIconSolid,
-  TableCellsIcon as TableCellsIconSolid,
-  EnvelopeIcon as EnvelopeIconSolid
-} from '@heroicons/react/24/solid'
 import { useNavigate } from 'react-router-dom'
 
 export function AboutPage() {
