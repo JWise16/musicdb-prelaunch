@@ -10,8 +10,18 @@ import {
   CalendarIcon,
   ChartBarIcon,
   SparklesIcon,
-  TableCellsIcon
+  TableCellsIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline'
+import { 
+  Bars3Icon as Bars3IconSolid, 
+  XMarkIcon as XMarkIconSolid,
+  CalendarIcon as CalendarIconSolid,
+  ChartBarIcon as ChartBarIconSolid,
+  SparklesIcon as SparklesIconSolid,
+  TableCellsIcon as TableCellsIconSolid,
+  EnvelopeIcon as EnvelopeIconSolid
+} from '@heroicons/react/24/solid'
 import { useNavigate } from 'react-router-dom'
 
 export function AboutPage() {
@@ -144,6 +154,24 @@ export function AboutPage() {
           </h2>
           
           <div className="space-y-12">
+            {/* The Motivation */}
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-6 border-b-2 border-blue-500 inline-block pb-1">
+                The Motivation
+              </h3>
+              <div className="prose prose-lg text-gray-600 space-y-4">
+                <p>
+                  The National Independent Venue Association (NIVA) revealed that 64% of independent venues in the U.S. were not profitable in 2024. Nearly half saw a drop in revenue, and over two-thirds faced rising costs, driven by inflation, insurance spikes, and labor shortages.
+                </p>
+                <p>
+                  Meanwhile, large corporate-backed venues like Live Nation and AEG have access to more data, technology, and resources, making it even harder for independent spaces to compete.
+                </p>
+                <p>
+                  Now more than ever, we believe the future of live music depends on independent venues working together. That's why we're building a tool designed to help them collaborate, share insights, and thrive.
+                </p>
+              </div>
+            </div>
+
             {/* The Problem */}
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-6 border-b-2 border-blue-500 inline-block pb-1">
@@ -419,9 +447,34 @@ export function AboutPage() {
             />
             <span className="text-2xl font-bold">MusicDB</span>
           </div>
-          <p className="text-gray-400">
+          <p className="text-gray-400 mb-6">
             Connecting venues with artists to create unforgettable live music experiences
           </p>
+          
+          {/* Contact Information */}
+          <div className="flex items-center justify-center space-x-6">
+            {/* Email */}
+            <a 
+              href="mailto:musicdb.team@gmail.com"
+              className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+            >
+              <EnvelopeIcon className="h-5 w-5" />
+              <span>musicdb.team@gmail.com</span>
+            </a>
+            
+            {/* LinkedIn */}
+            <a 
+              href="https://www.linkedin.com/company/musicdb/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              <span>LinkedIn</span>
+            </a>
+          </div>
         </div>
       </footer>
     </div>
