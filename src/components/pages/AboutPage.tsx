@@ -176,7 +176,7 @@ export function AboutPage() {
                   Some artists perform better in certain markets, and large social media followings or high streaming numbers don't always translate to ticket sales.
                 </p>
                 <p>
-                  There's pressure for venues fill the room. Not just to stay profitable, but to create a meaningful experience for the audience, artist, and venue.
+                  There's pressure for venues to fill the room. Not just to stay profitable, but to create a meaningful experience for the audience, artist, and venue.
                 </p>
                 <p>
                   At the same time, venues want to keep things fresh, bringing in new acts, supporting emerging talent, and building something special for their community. Doing that consistently, while managing financial risk can be a difficult balance.
@@ -197,7 +197,7 @@ export function AboutPage() {
                   On our platform, venues self-report ticket sales from their shows, contributing to a growing dataset that shows which artists are actually drawing crowds and where.
                 </p>
                 <p>
-                  In return, they get an analytics dashboard showing what's worked at their venue and data-driven recommendations on new artists who are a strong fit for future bookings.
+                  In return, they get an analytics dashboard showing what has worked at their venue and data-driven recommendations on new artists who are a strong fit for future bookings.
                 </p>
                 <p>
                   Our model works as an ecosystem. One that venues help build and in turn, benefit from.
@@ -332,7 +332,7 @@ export function AboutPage() {
                   After you log your shows, we create you a personal dashboard you can reference anytime that tracks what's consistently working and where there's room to experiment.
                 </p>
                 <p>
-                  In addition we store your booking history giving you a database of your shows to easily refer back to.
+                  In addition we store your booking history giving you a database of your shows to easily refer back to any time.
                 </p>
               </div>
             </div>
