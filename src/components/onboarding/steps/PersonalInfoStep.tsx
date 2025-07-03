@@ -22,8 +22,7 @@ export const PersonalInfoStep: React.FC<StepProps> = ({
   const contactMethod = watch('contact_method')
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto px-8 py-16">
+    <div className="max-w-4xl mx-auto px-8 py-16">
         {/* Back button - always show */}
         <button
           onClick={isFirst ? onBackToHome : onPrevious}
@@ -134,6 +133,5 @@ export const PersonalInfoStep: React.FC<StepProps> = ({
           </div>
         </div>
       </div>
-    </div>
   )
 } 

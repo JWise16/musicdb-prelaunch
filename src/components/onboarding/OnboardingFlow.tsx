@@ -6,6 +6,7 @@ import { VenueInfoStep } from './steps/VenueInfoStep'
 import { PersonalInfoStep } from './steps/PersonalInfoStep'
 import { ToolExcitementStep } from './steps/ToolExcitementStep'
 import { CompletionStep } from './steps/CompletionStep'
+import { ProgressBar } from '../common/ProgressBar'
 import * as yup from 'yup'
 import type { Database } from '../../lib/database.types'
 
@@ -233,14 +234,25 @@ export function OnboardingFlow() {
       {currentStep === steps.length - 1 ? (
         <CompletionStep onLearnMore={() => navigate('/about')} />
       ) : (
-        <CurrentStepComponent
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-          isFirst={currentStep === 0}
-          isLast={currentStep === steps.length - 2}
-          isSubmitting={isSubmitting}
-          onBackToHome={() => navigate('/')}
-        />
+        <div className="min-h-screen bg-white">
+          {/* Progress bar at the top */}
+          <div className="max-w-4xl mx-auto px-8 pt-8">
+            <ProgressBar 
+              currentStep={currentStep} 
+              totalSteps={steps.length - 1} 
+              className="mb-8"
+            />
+          </div>
+          
+          <CurrentStepComponent
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            isFirst={currentStep === 0}
+            isLast={currentStep === steps.length - 2}
+            isSubmitting={isSubmitting}
+            onBackToHome={() => navigate('/')}
+          />
+        </div>
       )}
     </FormProvider>
   )
